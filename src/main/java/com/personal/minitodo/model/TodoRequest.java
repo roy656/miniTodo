@@ -13,7 +13,7 @@ public class TodoRequest {
 
     private Long order;
 
-    private boolean completed;
+    private Boolean completed;
 
 
 
