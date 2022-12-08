@@ -13,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -40,6 +41,11 @@ public class TodoService {
 
         List<TodoEntity> todoList = todoRepository.findAll();
         List<TodoResponse> todoResponseList = new ArrayList<>();
+
+        // stream 사용 도 연습
+//        List<TodoResponse> todoResponseList1 = todoList.stream()
+//                .map(TodoResponse::new)
+//                .collect(Collectors.toList());
 
         for (TodoEntity todo : todoList) {
             todoResponseList.add(TodoResponse.builder()
