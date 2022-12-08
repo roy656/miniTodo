@@ -22,6 +22,8 @@ public class TodoController {
         this.todoService = todoService;
     }
 
+
+    // 파라미터에 필요한 어노테이션 잊지말기
     @PostMapping
     public ResponseEntity<TodoResponse> creatTodo(@RequestBody TodoRequest todoRequest) {
 
