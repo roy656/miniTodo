@@ -6,7 +6,10 @@ import com.personal.minitodo.model.TodoRequest;
 import com.personal.minitodo.model.TodoResponse;
 import com.personal.minitodo.repository.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,5 +52,35 @@ public class TodoService {
         return todoResponseList;
     }
 
+    public TodoEntity readOneTodo(Long id) {
 
+        return todoRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    @Transactional
+    public TodoEntity update(TodoRequest todoRequest, Long id) {
+        TodoEntity todoEntity = this.readOneTodo(id);
+        if(todoRequest.getTitle() != null) {
+            todoEntity.setTitle(todoRequest.getTitle());
+        }
+        if(todoRequest.getOrder() != null) {
+            todoEntity.setOrder(todoRequest.getOrder());
+        }
+        if(todoRequest.getCompleted() != null) {
+            todoEntity.setCompleted(todoRequest.getCompleted());
+        }
+
+        return this.todoRepository.save(todoEntity);
+    }
+
+    @Transactional
+    public void deleteOneTodo(Long id) {
+        todoRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void deleteAllTodo() {
+        todoRepository.deleteAll();
+    }
 }

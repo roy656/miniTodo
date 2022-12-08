@@ -24,13 +24,12 @@ public class TodoController {
 
     @PostMapping
     public ResponseEntity<TodoResponse> creatTodo(@RequestBody TodoRequest todoRequest) {
-        System.out.println("created");
 
         if (ObjectUtils.isEmpty(todoRequest.getTitle()))
             return ResponseEntity.badRequest().build();
 
         if (ObjectUtils.isEmpty(todoRequest.getOrder()))
-            todoRequest.setOrder(0L);
+            todoRequest.setOrder(0L);   // default 값 설정.
 
         if (ObjectUtils.isEmpty(todoRequest.getCompleted()))
             todoRequest.setCompleted(false);
@@ -43,29 +42,32 @@ public class TodoController {
 
     @GetMapping
     public ResponseEntity<List<TodoResponse>> readAllTodo() {
-        System.out.println("read all");
 
         return ResponseEntity.ok(todoService.readAll());
     }
-//
-//    @GetMapping("{Id}")
-//    public ResponseEntity<TodoResponse> readOneTodo(TodoService todoService) {
-//        System.out.println("read one");
-//    }
-//
-//    @PatchMapping("{Id}")
-//    public ResponseEntity<TodoResponse> updateTodo(TodoService todoService) {
-//        System.out.println("updated");
-//    }
-//
-//    @DeleteMapping("{Id}")
-//    public ResponseEntity<Object> deleteOneTodo(TodoService todoService) {
-//        System.out.println("deleted one");
-//    }
-//
-//    @DeleteMapping
-//    public ResponseEntity<Object> deleteAllTodo(TodoService todoService) {
-//        System.out.println("deleted all");
-//    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<TodoResponse> readOneTodo(@PathVariable Long id) {
+        TodoEntity result = todoService.readOneTodo(id);
+        return ResponseEntity.ok(new TodoResponse(result));
+    }
+
+    @PatchMapping("{id}")
+    public ResponseEntity<TodoResponse> updateTodo(@RequestBody TodoRequest todoRequest, @PathVariable Long id) {
+        TodoEntity result = todoService.update(todoRequest, id);
+        return ResponseEntity.ok(new TodoResponse(result));
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Object> deleteOneTodo(@PathVariable Long id) {
+        todoService.deleteOneTodo(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Object> deleteAllTodo() {
+        todoService.deleteAllTodo();
+        return ResponseEntity.ok().build();
+    }
 
 }
